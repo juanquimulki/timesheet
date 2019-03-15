@@ -15,13 +15,15 @@ public class Datos {
     private String turno1;
     private String turno2;
     private String turno3;
+    private String fichadas;
 
-    public Datos(String dia,String fecha, String turno1, String turno2, String turno3) {
-        this.dia    = dia;
-        this.fecha  = fecha;
-        this.turno1 = turno1;
-        this.turno2 = turno2;
-        this.turno3 = turno3;
+    public Datos(String dia,String fecha, String turno1, String turno2, String turno3,String fichadas) {
+        this.dia      = dia;
+        this.fecha    = fecha;
+        this.turno1   = turno1;
+        this.turno2   = turno2;
+        this.turno3   = turno3;
+        this.fichadas = fichadas;
     }
 
     public String getDia() {
@@ -62,5 +64,13 @@ public class Datos {
 
     public void setTurno3(String turno3) {
         this.turno3 = turno3;
+    }
+
+    public String getFichadas() {
+        return fichadas;
+    }
+
+    public void setFichadas(String fichadas) {
+        this.fichadas = fichadas;
     }
 }
