@@ -122,7 +122,7 @@ public class FXMLDocumentController implements Initializable {
                         aDia(yyyymmddFormat.format(rs.getTimestamp(1))),
                         mmddyyyyFormat.format(rs.getTimestamp(1)),
                         aTurno(rs.getInt(2),rs.getInt(3)),
-                        aTurno(rs.getInt(4),rs.getInt(6)),
+                        aTurno(rs.getInt(4),rs.getInt(5)),
                         aTurno(rs.getInt(6),rs.getInt(7)),
                         getFichadas((int) lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1)))
                 );

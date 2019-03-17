@@ -24,6 +24,7 @@ public class Reloj extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        stage.setTitle("Novedades de los Empleados");
         stage.setResizable(false);
         stage.show();
     }
