@@ -16,14 +16,16 @@ public class Datos {
     private String turno2;
     private String turno3;
     private String fichadas;
+    private String novedad;
 
-    public Datos(String dia,String fecha, String turno1, String turno2, String turno3,String fichadas) {
+    public Datos(String dia,String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad) {
         this.dia      = dia;
         this.fecha    = fecha;
         this.turno1   = turno1;
         this.turno2   = turno2;
         this.turno3   = turno3;
         this.fichadas = fichadas;
+        this.novedad  = novedad;
     }
 
     public String getDia() {
@@ -72,5 +74,13 @@ public class Datos {
 
     public void setFichadas(String fichadas) {
         this.fichadas = fichadas;
+    }
+
+    public String getNovedad() {
+        return novedad;
+    }
+
+    public void setNovedad(String novedad) {
+        this.novedad = novedad;
     }
 }

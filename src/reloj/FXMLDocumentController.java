@@ -9,7 +9,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -34,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  * @author jmulki
  */
 public class FXMLDocumentController implements Initializable {
+    int tardanza = 10;
    
     @FXML
     private ComboBox cmbEmpleados;
@@ -59,15 +59,25 @@ public class FXMLDocumentController implements Initializable {
     private TableColumn colTurno3;
     @FXML
     private TableColumn colFichadas;
+    @FXML
+    private TableColumn colNovedad;
     
     private ObservableList datosTabla = FXCollections.observableArrayList();    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        datDesde.setValue(LocalDate.now());
-        datHasta.setValue(LocalDate.now());
-
+        /*datDesde.setValue(LocalDate.now());
+        datHasta.setValue(LocalDate.now());*/
+        
+        int dia  = LocalDate.now().getDayOfMonth();
+        int mes  = LocalDate.now().getMonthValue();
+        int anio = LocalDate.now().getYear();
+        
+        datDesde.setValue(LocalDate.of(anio,mes,1));
+        int ultimo = ultimoDia(anio, mes);
+        datHasta.setValue(LocalDate.of(anio,mes,ultimo));
+        
         modelo = cmbEmpleados.getSelectionModel();
         
         try {
@@ -78,6 +88,7 @@ public class FXMLDocumentController implements Initializable {
                 cmbEmpleados.getItems().add(rs.getString(2));
                 lista.add(rs.getInt(1));
             }
+            cmbEmpleados.getSelectionModel().selectFirst();
         } catch (SQLException ex) {
             //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
@@ -93,13 +104,12 @@ public class FXMLDocumentController implements Initializable {
         
         try {
             Connection conn = BD.Conexion();
-            String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE2,DefS2"
+            String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3"
                     + " FROM Fichadas"
                     + " WHERE IdLegajo="+lista.get(modelo.getSelectedIndex())+" AND Fecha BETWEEN #"+datDesde.getValue()+"# and #"+datHasta.getValue()+"#"
                     + " ORDER BY Fecha";
             ResultSet rs = BD.Ejecutar(conn,sql);
             System.out.println(sql);
-
 
             colDia.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("dia"));  
@@ -113,6 +123,8 @@ public class FXMLDocumentController implements Initializable {
                     new PropertyValueFactory<Datos, String>("turno3"));  
             colFichadas.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("fichadas"));  
+            colNovedad.setCellValueFactory(
+                    new PropertyValueFactory<Datos, String>("novedad"));  
             datosTabla.clear();
         
             SimpleDateFormat mmddyyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -124,7 +136,8 @@ public class FXMLDocumentController implements Initializable {
                         aTurno(rs.getInt(2),rs.getInt(3)),
                         aTurno(rs.getInt(4),rs.getInt(5)),
                         aTurno(rs.getInt(6),rs.getInt(7)),
-                        getFichadas((int) lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1)))
+                        getFichadas((int) lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
+                        novedades((int)lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1)))
                 );
                 datosTabla.add(objDatos);
                 
@@ -181,7 +194,6 @@ public class FXMLDocumentController implements Initializable {
             System.out.println(ex.getMessage());
         }
         
-        
       String[] dias={"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
       int numeroDia=0;
       Calendar cal= Calendar.getInstance();
@@ -198,7 +210,7 @@ public class FXMLDocumentController implements Initializable {
         String sql = "SELECT Hora"
                 + " FROM ArchivoRegistracion"
                 + " WHERE IdLegajo="+idlegajo+" AND Fecha = #"+fecha+"#"
-                + " ORDER BY Hora";
+                + " ORDER BY IdFichada";
         ResultSet rs = BD.Ejecutar(conn,sql);
 
         try {
@@ -211,6 +223,90 @@ public class FXMLDocumentController implements Initializable {
         }
         
         //return String.valueOf(idlegajo)+" - "+fecha;
+        return cadena;
+    }
+    
+    public int ultimoDia(int anio, int mes) {
+        Calendar calendario=Calendar.getInstance();
+        calendario.set(anio, mes-1, 1);
+        return calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }    
+
+    private String novedades(int idlegajo, String fecha) {
+        //return idlegajo + " - " + fecha;
+        String cadena = "";
+        int i;
+        
+        Connection conn = BD.Conexion();
+        String sql1 = "SELECT DefE1,DefS1,DefE2,DefS2,DefE3,DefS3"
+                + " FROM Fichadas"
+                + " WHERE IdLegajo="+idlegajo+" AND Fecha = #"+fecha+"#"
+                + " ORDER BY Fecha";
+        
+        String sql2 = "SELECT Hora"
+                + " FROM ArchivoRegistracion"
+                + " WHERE IdLegajo="+idlegajo+" AND Fecha = #"+fecha+"#"
+                + " ORDER BY IdFichada";
+
+        boolean bh=false;
+        boolean br=false;
+        
+        int entrada_teorica;
+        int salida_teorica;
+        int entrada_real;
+        int salida_real;
+        int minutos;
+        
+        try {
+            ResultSet horario = BD.Ejecutar(conn,sql1);
+            ResultSet registros = BD.Ejecutar(conn,sql2);
+            if (horario.next()) {
+                i = 1;
+                while (horario.getInt("DefE"+i)>=0) {
+                    bh=true;
+                    entrada_teorica = horario.getInt("DefE"+i);
+                    salida_teorica  = horario.getInt("DefS"+i);
+                    
+                    if (registros.next()) {
+                        br=true;
+                        entrada_real = registros.getInt("Hora");
+                        minutos = entrada_real - entrada_teorica;
+                        if (minutos>tardanza) {
+                            cadena += "Entró tarde ("+minutos+")\n";
+                        }
+                        
+                        if (registros.next()) {
+                            salida_real = registros.getInt("Hora");
+                            minutos = salida_teorica - salida_real;
+                            if (minutos>5) {
+                                cadena += "Salió temprano ("+minutos+")\n";
+                            }
+                        }
+                        else {
+                            cadena = "Faltan registros\n";
+                        }
+                    }
+                    else {
+                        if (br) {
+                            cadena = "Faltan registros\n";
+                        }
+                        else {
+                            cadena = "Ausente\n";
+                        }
+                    }
+                    i++;
+                }
+                if (bh) {
+                    
+                }
+                else {
+                    //cadena = "Franco";
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return cadena;
     }
 }
