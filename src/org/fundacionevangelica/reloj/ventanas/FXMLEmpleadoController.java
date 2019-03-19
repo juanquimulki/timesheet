@@ -3,20 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reloj;
+package org.fundacionevangelica.reloj.ventanas;
 
+import org.fundacionevangelica.reloj.datos.BD;
+import org.fundacionevangelica.reloj.clases.Datos;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,7 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author jmulki
  */
-public class FXMLDocumentController implements Initializable {
+public class FXMLEmpleadoController implements Initializable {
     int tardanza = 10;
    
     @FXML
@@ -61,6 +62,8 @@ public class FXMLDocumentController implements Initializable {
     private TableColumn colFichadas;
     @FXML
     private TableColumn colNovedad;
+    @FXML
+    private TableColumn colSistema;
     
     private ObservableList datosTabla = FXCollections.observableArrayList();    
     
@@ -104,8 +107,9 @@ public class FXMLDocumentController implements Initializable {
         
         try {
             Connection conn = BD.Conexion();
-            String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3"
+            String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion"
                     + " FROM Fichadas"
+                    + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.CodNovedad"
                     + " WHERE IdLegajo="+lista.get(modelo.getSelectedIndex())+" AND Fecha BETWEEN #"+datDesde.getValue()+"# and #"+datHasta.getValue()+"#"
                     + " ORDER BY Fecha";
             ResultSet rs = BD.Ejecutar(conn,sql);
@@ -125,6 +129,8 @@ public class FXMLDocumentController implements Initializable {
                     new PropertyValueFactory<Datos, String>("fichadas"));  
             colNovedad.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("novedad"));  
+            colSistema.setCellValueFactory(
+                    new PropertyValueFactory<Datos, String>("sistema"));  
             datosTabla.clear();
         
             SimpleDateFormat mmddyyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -137,7 +143,8 @@ public class FXMLDocumentController implements Initializable {
                         aTurno(rs.getInt(4),rs.getInt(5)),
                         aTurno(rs.getInt(6),rs.getInt(7)),
                         getFichadas((int) lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
-                        novedades((int)lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1)))
+                        novedades((int)lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
+                        rs.getString(8)
                 );
                 datosTabla.add(objDatos);
                 
@@ -166,9 +173,16 @@ public class FXMLDocumentController implements Initializable {
         int mins;
         String cadena="";
         
+        DecimalFormat df = new DecimalFormat("#.00");
+        
         if (minutos>=0) {
             horas = minutos / 60;
+
+            horas = Double.parseDouble(df.format(horas).replace(",", "."));
+            System.out.println(horas);
+            
             resto = horas - (int) horas;
+            resto = Double.parseDouble(df.format(resto).replace(",", "."));
             mins  = (int) (resto * 60);
          
             if (horas<10) cadena = cadena + "0";

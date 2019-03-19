@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reloj;
+package org.fundacionevangelica.reloj.clases;
 
 /**
  *
@@ -17,8 +17,9 @@ public class Datos {
     private String turno3;
     private String fichadas;
     private String novedad;
+    private String sistema;
 
-    public Datos(String dia,String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad) {
+    public Datos(String dia,String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad, String sistema) {
         this.dia      = dia;
         this.fecha    = fecha;
         this.turno1   = turno1;
@@ -26,6 +27,7 @@ public class Datos {
         this.turno3   = turno3;
         this.fichadas = fichadas;
         this.novedad  = novedad;
+        this.sistema  = sistema;
     }
 
     public String getDia() {
@@ -82,5 +84,13 @@ public class Datos {
 
     public void setNovedad(String novedad) {
         this.novedad = novedad;
+    }
+
+    public String getSistema() {
+        return sistema;
+    }
+
+    public void setSistema(String sistema) {
+        this.sistema = sistema;
     }
 }
