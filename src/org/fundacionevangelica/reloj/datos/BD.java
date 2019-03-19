@@ -19,7 +19,8 @@ public class BD {
     
     public static Connection Conexion() {
         try {
-            Connection conn=DriverManager.getConnection("jdbc:ucanaccess://C:/Program Files (x86)/C.In.Ti.A. Version Base/Cintia.mdb","","ngtayeXmr?h");
+            Connection conn=DriverManager.getConnection("jdbc:ucanaccess://C:/Program Files/C.In.Ti.A. Version Base/Cintia.mdb","","ngtayeXmr?h");
+            //Connection conn=DriverManager.getConnection("jdbc:ucanaccess://C:/Program Files (x86)/C.In.Ti.A. Version Base/Cintia.mdb","","ngtayeXmr?h");
             return conn;
         } catch (SQLException ex) {
             //Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
