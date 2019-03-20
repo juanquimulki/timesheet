@@ -19,7 +19,7 @@ public class Conexiones {
     }
     
     public static Connection Conexion2() {
-        String directorio = "Program Files (x86)";
+        String directorio = "Program Files";
         String password = "ngtayeXmr?h";
         
         try {    
