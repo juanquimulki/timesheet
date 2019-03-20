@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.fundacionevangelica.reloj.ventanas;
 
 import org.fundacionevangelica.reloj.datos.BD;
@@ -22,19 +17,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.fundacionevangelica.reloj.clases.Fecha;
 
-/**
- *
- * @author jmulki
- */
 public class FXMLEmpleadoController implements Initializable {
-    int tardanza = 10;
+    int turnos    = 3;
+    int tardanza  = 10;
+    int tempranza = 5;
    
     @FXML
     private ComboBox cmbEmpleados;
@@ -69,16 +65,11 @@ public class FXMLEmpleadoController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        /*datDesde.setValue(LocalDate.now());
-        datHasta.setValue(LocalDate.now());*/
-        
-        int dia  = LocalDate.now().getDayOfMonth();
         int mes  = LocalDate.now().getMonthValue();
         int anio = LocalDate.now().getYear();
         
         datDesde.setValue(LocalDate.of(anio,mes,1));
-        int ultimo = ultimoDia(anio, mes);
+        int ultimo = Fecha.ultimoDia(anio, mes);
         datHasta.setValue(LocalDate.of(anio,mes,ultimo));
         
         modelo = cmbEmpleados.getSelectionModel();
@@ -87,33 +78,27 @@ public class FXMLEmpleadoController implements Initializable {
             Connection conn = BD.Conexion();
             ResultSet rs = BD.Ejecutar(conn,"SELECT IdLegajo,Nombre FROM Legajos");
             while (rs.next()) {
-                System.out.println(rs.getString(2));
                 cmbEmpleados.getItems().add(rs.getString(2));
                 lista.add(rs.getInt(1));
             }
             cmbEmpleados.getSelectionModel().selectFirst();
         } catch (SQLException ex) {
-            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
         }        
     }    
  
     public void mostrar() {
-        System.out.println(datDesde.getValue());
-        System.out.println(datHasta.getValue());
-        
-        System.out.println(lista.get(modelo.getSelectedIndex()));
-        System.out.println(modelo.getSelectedItem().toString());
+        Alert alerta = new Alert(Alert.AlertType.NONE,"Espere por favor...",ButtonType.CLOSE);
+        alerta.show();
         
         try {
             Connection conn = BD.Conexion();
             String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion"
                     + " FROM Fichadas"
-                    + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.CodNovedad"
+                    + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.IdNovedad"
                     + " WHERE IdLegajo="+lista.get(modelo.getSelectedIndex())+" AND Fecha BETWEEN #"+datDesde.getValue()+"# and #"+datHasta.getValue()+"#"
                     + " ORDER BY Fecha";
             ResultSet rs = BD.Ejecutar(conn,sql);
-            System.out.println(sql);
 
             colDia.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("dia"));  
@@ -147,14 +132,12 @@ public class FXMLEmpleadoController implements Initializable {
                         rs.getString(8)
                 );
                 datosTabla.add(objDatos);
-                
-                System.out.println(mmddyyyyFormat.format(rs.getTimestamp(1)));
             }
         } catch (SQLException ex) {
-            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
         } 
         tblDatos.setItems(datosTabla);
+        alerta.close();
     }
     
     private String aTurno(int entrada, int salida) {
@@ -179,7 +162,6 @@ public class FXMLEmpleadoController implements Initializable {
             horas = minutos / 60;
 
             horas = Double.parseDouble(df.format(horas).replace(",", "."));
-            System.out.println(horas);
             
             resto = horas - (int) horas;
             resto = Double.parseDouble(df.format(resto).replace(",", "."));
@@ -204,17 +186,15 @@ public class FXMLEmpleadoController implements Initializable {
         try {
             fecha = formatoDelTexto.parse(strFecha);
         } catch (ParseException ex) {
-            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
         }
         
-      String[] dias={"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
+      String[] dias = Fecha.diasSemana();
       int numeroDia=0;
       Calendar cal= Calendar.getInstance();
 
       cal.setTime(fecha);
       numeroDia=cal.get(Calendar.DAY_OF_WEEK);
-      System.out.println("hoy es "+ dias[numeroDia - 1]);
       return dias[numeroDia - 1];
     }
     
@@ -233,21 +213,12 @@ public class FXMLEmpleadoController implements Initializable {
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //return String.valueOf(idlegajo)+" - "+fecha;
         return cadena;
     }
     
-    public int ultimoDia(int anio, int mes) {
-        Calendar calendario=Calendar.getInstance();
-        calendario.set(anio, mes-1, 1);
-        return calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }    
-
     private String novedades(int idlegajo, String fecha) {
-        //return idlegajo + " - " + fecha;
         String cadena = "";
         int i;
         
@@ -292,7 +263,7 @@ public class FXMLEmpleadoController implements Initializable {
                         if (registros.next()) {
                             salida_real = registros.getInt("Hora");
                             minutos = salida_teorica - salida_real;
-                            if (minutos>5) {
+                            if (minutos>tempranza) {
                                 cadena += "Salió temprano ("+minutos+")\n";
                             }
                         }
@@ -319,7 +290,6 @@ public class FXMLEmpleadoController implements Initializable {
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return cadena;
     }

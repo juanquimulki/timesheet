@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.fundacionevangelica.reloj.ventanas;
 
 import java.net.URL;
@@ -15,23 +10,14 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.fundacionevangelica.reloj.clases.Ventana;
 
-/**
- * FXML Controller class
- *
- * @author jmulki
- */
 public class FXMLPrincipalController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
 
     public void menu_salir() {
-        //System.exit(0);
         Platform.exit();
     }
     
@@ -56,7 +42,6 @@ public class FXMLPrincipalController implements Initializable {
                     Ventana.EMPLEADO_abierta = false;
                 }
             });
-            
         }
         else {
             String mensaje;
