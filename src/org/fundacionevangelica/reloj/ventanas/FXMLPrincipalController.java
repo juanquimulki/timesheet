@@ -51,4 +51,26 @@ public class FXMLPrincipalController implements Initializable {
             alerta.showAndWait();
         }
     }
+
+    public void menu_nivel() {
+        Ventana window = new Ventana();
+        if (!Ventana.NIVEL_abierta) {
+            Ventana.NIVEL_abierta = true;
+            Stage stage = window.mostrar(Ventana.NIVEL,"Análisis por Nivel");
+            
+            stage.setOnCloseRequest(new javafx.event.EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event1) {
+                    Ventana.NIVEL_abierta = false;
+                }
+            });
+        }
+        else {
+            String mensaje;
+            mensaje = Ventana.VENTANA_ABIERTA;
+
+            Alert alerta = new Alert(Alert.AlertType.NONE,mensaje,ButtonType.OK);
+            alerta.showAndWait();
+        }
+    }    
 }

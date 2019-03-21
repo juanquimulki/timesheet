@@ -34,13 +34,24 @@ public class FXMLEmpleadoController implements Initializable {
    
     @FXML
     private ComboBox cmbEmpleados;
+    ObservableList listaEmp = FXCollections.observableArrayList();
+    SelectionModel modeloEmp;
+
+    @FXML
+    private ComboBox cmbNiveles;
+    ObservableList listaNiv = FXCollections.observableArrayList();
+    SelectionModel modeloNiv;
+
+    @FXML
+    private ComboBox cmbNovedades;
+    ObservableList listaNov = FXCollections.observableArrayList();
+    SelectionModel modeloNov;
+
     @FXML
     private DatePicker datDesde;
     @FXML
     private DatePicker datHasta;
     
-    ObservableList lista = FXCollections.observableArrayList();
-    SelectionModel modelo;
 
     @FXML
     private TableView tblDatos;
@@ -72,19 +83,50 @@ public class FXMLEmpleadoController implements Initializable {
         int ultimo = Fecha.ultimoDia(anio, mes);
         datHasta.setValue(LocalDate.of(anio,mes,ultimo));
         
-        modelo = cmbEmpleados.getSelectionModel();
-        
+        modeloEmp = cmbEmpleados.getSelectionModel();
+        cmbEmpleados.getItems().add("(Todos...)");
+        listaEmp.add(0);
         try {
             Connection conn = BD.Conexion();
             ResultSet rs = BD.Ejecutar(conn,"SELECT IdLegajo,Nombre FROM Legajos");
             while (rs.next()) {
                 cmbEmpleados.getItems().add(rs.getString(2));
-                lista.add(rs.getInt(1));
+                listaEmp.add(rs.getInt(1));
             }
             cmbEmpleados.getSelectionModel().selectFirst();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }        
+
+        modeloNiv = cmbNiveles.getSelectionModel();
+        cmbNiveles.getItems().add("(Todos...)");
+        listaNiv.add(0);
+        try {
+            Connection conn = BD.Conexion();
+            ResultSet rs = BD.Ejecutar(conn,"SELECT IdEmpresa,Nombre FROM Empresas WHERE IdEmpresa>=4");
+            while (rs.next()) {
+                cmbNiveles.getItems().add(rs.getString(2));
+                listaNiv.add(rs.getInt(1));
+            }
+            cmbNiveles.getSelectionModel().selectFirst();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }        
+
+        modeloNov = cmbNovedades.getSelectionModel();
+        cmbNovedades.getItems().add("(Todas...)");
+        listaNov.add(0);
+        try {
+            Connection conn = BD.Conexion();
+            ResultSet rs = BD.Ejecutar(conn,"SELECT IdNovedad,Descripcion FROM Novedades ORDER BY Descripcion");
+            while (rs.next()) {
+                cmbNovedades.getItems().add(rs.getString(2));
+                listaNov.add(rs.getInt(1));
+            }
+            cmbNovedades.getSelectionModel().selectFirst();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }   
     }    
  
     public void mostrar() {
@@ -96,7 +138,7 @@ public class FXMLEmpleadoController implements Initializable {
             String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion"
                     + " FROM Fichadas"
                     + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.IdNovedad"
-                    + " WHERE IdLegajo="+lista.get(modelo.getSelectedIndex())+" AND Fecha BETWEEN #"+datDesde.getValue()+"# and #"+datHasta.getValue()+"#"
+                    + " WHERE IdLegajo="+listaEmp.get(modeloEmp.getSelectedIndex())+" AND Fecha BETWEEN #"+datDesde.getValue()+"# and #"+datHasta.getValue()+"#"
                     + " ORDER BY Fecha";
             ResultSet rs = BD.Ejecutar(conn,sql);
 
@@ -127,8 +169,8 @@ public class FXMLEmpleadoController implements Initializable {
                         aTurno(rs.getInt(2),rs.getInt(3)),
                         aTurno(rs.getInt(4),rs.getInt(5)),
                         aTurno(rs.getInt(6),rs.getInt(7)),
-                        getFichadas((int) lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
-                        novedades((int)lista.get(modelo.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
+                        getFichadas((int) listaEmp.get(modeloEmp.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
+                        novedades((int)listaEmp.get(modeloEmp.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
                         rs.getString(8)
                 );
                 datosTabla.add(objDatos);
