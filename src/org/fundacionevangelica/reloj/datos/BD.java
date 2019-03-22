@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class BD {
     
     public static Connection Conexion() {
-        Connection conn = Conexiones.Conexion2();
+        Connection conn = Conexiones.Conexion1();
         return conn;
     }
     

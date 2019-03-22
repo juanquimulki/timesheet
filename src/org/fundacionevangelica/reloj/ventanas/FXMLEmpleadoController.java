@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -25,6 +26,7 @@ import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import org.fundacionevangelica.reloj.clases.Fecha;
 
 public class FXMLEmpleadoController implements Initializable {
@@ -54,6 +56,8 @@ public class FXMLEmpleadoController implements Initializable {
     
     @FXML
     private TableView tblDatos;
+    @FXML
+    private TableColumn colId;
     @FXML
     private TableColumn colDate;
     @FXML
@@ -134,6 +138,18 @@ public class FXMLEmpleadoController implements Initializable {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }   
+
+        tblDatos.setOnMousePressed(new javafx.event.EventHandler<MouseEvent>() {
+            @Override 
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    //System.out.println(tblDatos.getSelectionModel().getSelectedItem());
+                    Datos objDatos = new Datos();
+                    objDatos = (Datos)tblDatos.getSelectionModel().getSelectedItem();
+                    System.out.println(objDatos.getEmpleado());
+                }
+            }
+        });
     }    
  
     public void mostrar() {
@@ -151,6 +167,8 @@ public class FXMLEmpleadoController implements Initializable {
             );
             ResultSet rs = BD.Ejecutar(conn,sql);
 
+            colId.setCellValueFactory(
+                    new PropertyValueFactory<Datos, String>("id"));  
             colDate.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("date"));  
             colEmpleado.setCellValueFactory(
@@ -177,7 +195,7 @@ public class FXMLEmpleadoController implements Initializable {
             SimpleDateFormat yyyymmddFormat = new SimpleDateFormat("yyyy-MM-dd");
             while (rs.next()) {
                 Datos objDatos = new Datos(
-                        "hola",
+                        String.valueOf(rs.getInt(9)),
                         yyyymmddFormat.format(rs.getTimestamp(1)),
                         rs.getString(10),
                         aDia(yyyymmddFormat.format(rs.getTimestamp(1))),
