@@ -21,7 +21,7 @@ public class Reloj extends Application {
         stage.setTitle("Análisis de Reloj Biométrico");
         stage.getIcons().add(new Image("/org/fundacionevangelica/reloj/recursos/calendar-clock.png"));
         //stage.setResizable(false);
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.setOnCloseRequest(new javafx.event.EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event1) {

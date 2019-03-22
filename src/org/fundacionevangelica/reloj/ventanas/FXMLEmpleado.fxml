@@ -20,6 +20,7 @@
       <Button fx:id="btnMostrar" layoutX="582.0" layoutY="24.0" mnemonicParsing="false" onAction="#mostrar" prefHeight="71.0" prefWidth="78.0" text="Mostrar" />
       <TableView fx:id="tblDatos" layoutX="14.0" layoutY="107.0" prefHeight="293.0" prefWidth="1004.0">
         <columns>
+            <TableColumn fx:id="colDate" prefWidth="75.0" text="Fecha" />
             <TableColumn fx:id="colEmpleado" prefWidth="205.0" text="Empleado" />
             <TableColumn fx:id="colDia" minWidth="0.0" prefWidth="96.0" text="Dia" />
           <TableColumn fx:id="colFecha" prefWidth="90.0" text="Fecha" />

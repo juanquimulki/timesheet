@@ -52,9 +52,10 @@ public class FXMLEmpleadoController implements Initializable {
     @FXML
     private DatePicker datHasta;
     
-
     @FXML
     private TableView tblDatos;
+    @FXML
+    private TableColumn colDate;
     @FXML
     private TableColumn colEmpleado;
     @FXML
@@ -117,6 +118,10 @@ public class FXMLEmpleadoController implements Initializable {
 
         modeloNov = cmbNovedades.getSelectionModel();
         cmbNovedades.getItems().add("(Todas...)");
+        listaNov.add(-1);
+        cmbNovedades.getItems().add("CON NOVEDADES");
+        listaNov.add(-2);
+        cmbNovedades.getItems().add("SIN NOVEDADES");
         listaNov.add(0);
         try {
             Connection conn = BD.Conexion();
@@ -146,6 +151,8 @@ public class FXMLEmpleadoController implements Initializable {
             );
             ResultSet rs = BD.Ejecutar(conn,sql);
 
+            colDate.setCellValueFactory(
+                    new PropertyValueFactory<Datos, String>("date"));  
             colEmpleado.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("empleado"));  
             colDia.setCellValueFactory(
@@ -170,6 +177,8 @@ public class FXMLEmpleadoController implements Initializable {
             SimpleDateFormat yyyymmddFormat = new SimpleDateFormat("yyyy-MM-dd");
             while (rs.next()) {
                 Datos objDatos = new Datos(
+                        "hola",
+                        yyyymmddFormat.format(rs.getTimestamp(1)),
                         rs.getString(10),
                         aDia(yyyymmddFormat.format(rs.getTimestamp(1))),
                         mmddyyyyFormat.format(rs.getTimestamp(1)),
@@ -348,10 +357,14 @@ public class FXMLEmpleadoController implements Initializable {
         
         if (idnivel>0)    where += " AND IdEmpresa="+idnivel;
         if (idempleado>0) where += " AND IdLegajo="+idempleado;
-        if (idnovedad>0)  where += " AND IdNovedad="+idnovedad;
+        if (idnovedad>=0) 
+            where += " AND Fichadas.CodNovedad="+idnovedad;
+        else
+            if (idnovedad==(-2))
+                where += " AND Fichadas.CodNovedad>0";
         
-        
-        return "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion,IdLegajo,Nombre,CodNovedad"
+        System.out.println(where);
+        return "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion,Fichadas.IdLegajo,Nombre,CodNovedad"
                     + " FROM Fichadas"
                     + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.IdNovedad"
                     + " INNER JOIN Legajos ON Fichadas.IdLegajo=Legajos.IdLegajo"
