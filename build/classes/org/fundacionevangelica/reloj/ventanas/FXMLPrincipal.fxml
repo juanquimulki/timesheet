@@ -12,8 +12,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Consultas">
             <items>
-                  <MenuItem fx:id="mnuEmpleado" mnemonicParsing="false" onAction="#menu_empleado" text="Por Empleado" />
-                  <MenuItem fx:id="mnuNivel" mnemonicParsing="false" onAction="#menu_nivel" text="Por Nivel" />
+                  <MenuItem fx:id="mnuEmpleado" mnemonicParsing="false" onAction="#menu_empleado" text="Reporte Integral" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#menu_salir" text="Salir" />
             </items>

@@ -1,6 +1,7 @@
 package org.fundacionevangelica.reloj.clases;
 
 public class Datos {
+    private String empleado;
     private String dia;
     private String fecha;
     private String turno1;
@@ -10,7 +11,8 @@ public class Datos {
     private String novedad;
     private String sistema;
 
-    public Datos(String dia,String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad, String sistema) {
+    public Datos(String empleado, String dia, String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad, String sistema) {
+        this.empleado = empleado;
         this.dia      = dia;
         this.fecha    = fecha;
         this.turno1   = turno1;
@@ -19,6 +21,14 @@ public class Datos {
         this.fichadas = fichadas;
         this.novedad  = novedad;
         this.sistema  = sistema;
+    }
+
+    public String getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(String empleado) {
+        this.empleado = empleado;
     }
 
     public String getDia() {

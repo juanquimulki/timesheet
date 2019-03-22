@@ -56,6 +56,8 @@ public class FXMLEmpleadoController implements Initializable {
     @FXML
     private TableView tblDatos;
     @FXML
+    private TableColumn colEmpleado;
+    @FXML
     private TableColumn colDia;
     @FXML
     private TableColumn colFecha;
@@ -135,13 +137,17 @@ public class FXMLEmpleadoController implements Initializable {
         
         try {
             Connection conn = BD.Conexion();
-            String sql = "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion"
-                    + " FROM Fichadas"
-                    + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.IdNovedad"
-                    + " WHERE IdLegajo="+listaEmp.get(modeloEmp.getSelectedIndex())+" AND Fecha BETWEEN #"+datDesde.getValue()+"# and #"+datHasta.getValue()+"#"
-                    + " ORDER BY Fecha";
+            String sql = generarSQL(
+                    (int)listaNiv.get(modeloNiv.getSelectedIndex()),
+                    (int)listaEmp.get(modeloEmp.getSelectedIndex()),
+                    (int)listaNov.get(modeloNov.getSelectedIndex()),
+                    datDesde.getValue(),
+                    datHasta.getValue()
+            );
             ResultSet rs = BD.Ejecutar(conn,sql);
 
+            colEmpleado.setCellValueFactory(
+                    new PropertyValueFactory<Datos, String>("empleado"));  
             colDia.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("dia"));  
             colFecha.setCellValueFactory(
@@ -164,13 +170,14 @@ public class FXMLEmpleadoController implements Initializable {
             SimpleDateFormat yyyymmddFormat = new SimpleDateFormat("yyyy-MM-dd");
             while (rs.next()) {
                 Datos objDatos = new Datos(
+                        rs.getString(10),
                         aDia(yyyymmddFormat.format(rs.getTimestamp(1))),
                         mmddyyyyFormat.format(rs.getTimestamp(1)),
                         aTurno(rs.getInt(2),rs.getInt(3)),
                         aTurno(rs.getInt(4),rs.getInt(5)),
                         aTurno(rs.getInt(6),rs.getInt(7)),
-                        getFichadas((int) listaEmp.get(modeloEmp.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
-                        novedades((int)listaEmp.get(modeloEmp.getSelectedIndex()),yyyymmddFormat.format(rs.getTimestamp(1))),
+                        getFichadas(rs.getInt(9),yyyymmddFormat.format(rs.getTimestamp(1))),
+                        novedades(rs.getInt(9),yyyymmddFormat.format(rs.getTimestamp(1))),
                         rs.getString(8)
                 );
                 datosTabla.add(objDatos);
@@ -334,5 +341,21 @@ public class FXMLEmpleadoController implements Initializable {
             System.out.println(ex.getMessage());
         }
         return cadena;
+    }
+
+    private String generarSQL(int idnivel, int idempleado, int idnovedad, LocalDate desde, LocalDate hasta) {
+        String where = " WHERE Fecha BETWEEN #"+desde+"# and #"+hasta+"#";
+        
+        if (idnivel>0)    where += " AND IdEmpresa="+idnivel;
+        if (idempleado>0) where += " AND IdLegajo="+idempleado;
+        if (idnovedad>0)  where += " AND IdNovedad="+idnovedad;
+        
+        
+        return "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion,IdLegajo,Nombre,CodNovedad"
+                    + " FROM Fichadas"
+                    + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.IdNovedad"
+                    + " INNER JOIN Legajos ON Fichadas.IdLegajo=Legajos.IdLegajo"
+                    + where
+                    + " ORDER BY Nombre,Fecha";
     }
 }
