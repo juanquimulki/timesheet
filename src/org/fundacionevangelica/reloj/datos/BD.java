@@ -22,4 +22,13 @@ public class BD {
         }
         return null;
     }
+
+    public static void Actualizar(Connection conn,String sql) {
+        try {
+            Statement s = conn.createStatement();
+            s.executeUpdate(sql);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }

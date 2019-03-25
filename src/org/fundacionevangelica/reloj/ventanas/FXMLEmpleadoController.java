@@ -13,13 +13,15 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.SelectionModel;
@@ -27,13 +29,23 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.fundacionevangelica.reloj.clases.Fecha;
+import org.fundacionevangelica.reloj.clases.Ventana;
 
 public class FXMLEmpleadoController implements Initializable {
     int turnos    = 3;
     int tardanza  = 10;
     int tempranza = 5;
+    
+    public static Datos datos;
    
+    @FXML
+    private AnchorPane frmEmpleado;
+
     @FXML
     private ComboBox cmbEmpleados;
     ObservableList listaEmp = FXCollections.observableArrayList();
@@ -53,6 +65,8 @@ public class FXMLEmpleadoController implements Initializable {
     private DatePicker datDesde;
     @FXML
     private DatePicker datHasta;
+    @FXML
+    private CheckBox chkFinde;
     
     @FXML
     private TableView tblDatos;
@@ -63,23 +77,23 @@ public class FXMLEmpleadoController implements Initializable {
     @FXML
     private TableColumn colEmpleado;
     @FXML
-    private TableColumn colDia;
+    TableColumn colDia;
     @FXML
-    private TableColumn colFecha;
+    TableColumn colFecha;
     @FXML
-    private TableColumn colTurno1;
+    TableColumn colTurno1;
     @FXML
-    private TableColumn colTurno2;
+    TableColumn colTurno2;
     @FXML
-    private TableColumn colTurno3;
+    TableColumn colTurno3;
     @FXML
-    private TableColumn colFichadas;
+    TableColumn colFichadas;
     @FXML
-    private TableColumn colNovedad;
+    TableColumn colNovedad;
     @FXML
-    private TableColumn colSistema;
+    TableColumn colSistema;
     
-    private ObservableList datosTabla = FXCollections.observableArrayList();    
+    ObservableList datosTabla = FXCollections.observableArrayList();    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -146,7 +160,7 @@ public class FXMLEmpleadoController implements Initializable {
                     //System.out.println(tblDatos.getSelectionModel().getSelectedItem());
                     Datos objDatos = new Datos();
                     objDatos = (Datos)tblDatos.getSelectionModel().getSelectedItem();
-                    System.out.println(objDatos.getEmpleado());
+                    ver_novedad(objDatos);
                 }
             }
         });
@@ -207,7 +221,15 @@ public class FXMLEmpleadoController implements Initializable {
                         novedades(rs.getInt(9),yyyymmddFormat.format(rs.getTimestamp(1))),
                         rs.getString(8)
                 );
-                datosTabla.add(objDatos);
+                
+                if (!chkFinde.isSelected()) {
+                    if ((objDatos.getDia()!="Sábado") && (objDatos.getDia()!="Domingo")) {
+                        datosTabla.add(objDatos);
+                    }
+                }
+                else {
+                    datosTabla.add(objDatos);
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -381,12 +403,37 @@ public class FXMLEmpleadoController implements Initializable {
             if (idnovedad==(-2))
                 where += " AND Fichadas.CodNovedad>0";
         
-        System.out.println(where);
         return "SELECT Fecha,DefE1,DefS1,DefE2,DefS2,DefE3,DefS3,Descripcion,Fichadas.IdLegajo,Nombre,CodNovedad"
                     + " FROM Fichadas"
                     + " LEFT OUTER JOIN Novedades ON Fichadas.CodNovedad=Novedades.IdNovedad"
                     + " INNER JOIN Legajos ON Fichadas.IdLegajo=Legajos.IdLegajo"
                     + where
                     + " ORDER BY Nombre,Fecha";
+    }
+
+
+    private void ver_novedad(Datos objeto) {
+        datos = objeto;
+        Ventana window = new Ventana();
+        if (!Ventana.NOVEDAD_abierta) {
+            Ventana.NOVEDAD_abierta = true;
+            Stage stage = window.mostrarModal(Ventana.NOVEDAD,"Editar Novedad");
+
+            mostrar();
+            
+            stage.setOnCloseRequest(new javafx.event.EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event1) {
+                    Ventana.NOVEDAD_abierta = false;
+                }
+            });
+        }
+        else {
+            String mensaje;
+            mensaje = Ventana.VENTANA_ABIERTA;
+
+            Alert alerta = new Alert(Alert.AlertType.NONE,mensaje,ButtonType.OK);
+            alerta.showAndWait();
+        }
     }
 }
