@@ -4,6 +4,7 @@ import org.fundacionevangelica.reloj.datos.BD;
 import org.fundacionevangelica.reloj.clases.Datos;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -12,7 +13,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,6 +37,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import org.fundacionevangelica.reloj.clases.Fecha;
 import org.fundacionevangelica.reloj.clases.Ventana;
 
@@ -435,5 +443,46 @@ public class FXMLEmpleadoController implements Initializable {
             Alert alerta = new Alert(Alert.AlertType.NONE,mensaje,ButtonType.OK);
             alerta.showAndWait();
         }
+    }
+    
+    public void imprimir() throws SQLException {
+        int cantidad = datosTabla.size();
+        int i;
+        Datos objDatos;
+        Connection conn = BD.Conexion();
+        String sql = "DELETE * FROM Informe";
+        BD.Actualizar(conn, sql);
+        
+        for (i=1;i<=cantidad;i++) {
+            objDatos = (Datos)datosTabla.get(i-1);
+            /*String sql = "INSERT INTO Informe (Empleado,Dia,Fecha,Horario,Registraciones,Novedad) VALUES ("
+                    + "'" + objDatos.getEmpleado() + "',"
+                    + "'" + objDatos.getDia() + "',"
+                    + "'" + objDatos.getFecha() + "',"
+                    + "'" + objDatos.getTurno1() + " " + objDatos.getTurno2() + " " + objDatos.getTurno3() + "',"
+                    + "'" + objDatos.getFichadas() + "',"
+                    + "'" + objDatos.getNovedad()+ "'"
+                    + ")";*/
+            sql = "INSERT INTO Informe (Empleado,Dia,Fecha,Horario,Registraciones,Novedad) VALUES (?,?,?,?,?,?)";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, objDatos.getEmpleado());
+            st.setString(2, objDatos.getDia());
+            st.setString(3, objDatos.getFecha());
+            st.setString(4, objDatos.getTurno1()+" "+objDatos.getTurno2()+" "+objDatos.getTurno3());
+            st.setString(5, objDatos.getFichadas());
+            st.setString(6, objDatos.getSistema());
+            st.executeUpdate();
+        }
+        
+        HashMap params = new HashMap();
+        JasperPrint jasperPrintWindow;
+        try {
+            jasperPrintWindow = JasperFillManager.fillReport("ReporteNovedades.jasper",params,BD.Conexion());
+            JasperViewer jasperViewer = new JasperViewer(jasperPrintWindow,false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
     }
 }

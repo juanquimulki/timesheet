@@ -18,19 +18,20 @@
       <Label layoutX="456.0" layoutY="51.0" text="Hasta:" />
       <DatePicker fx:id="datHasta" layoutX="456.0" layoutY="68.0" prefHeight="25.0" prefWidth="120.0" />
       <Button fx:id="btnMostrar" layoutX="582.0" layoutY="24.0" mnemonicParsing="false" onAction="#mostrar" prefHeight="71.0" prefWidth="78.0" text="Mostrar" />
+      <Button fx:id="btnImprimir" layoutX="666.0" layoutY="24.0" mnemonicParsing="false" onAction="#imprimir" prefHeight="71.0" prefWidth="78.0" text="Imprimir" />
       <TableView fx:id="tblDatos" layoutX="14.0" layoutY="132.0" prefHeight="293.0" prefWidth="1004.0">
         <columns>
             <TableColumn fx:id="colId" prefWidth="75.0" text="Id" visible="false" />
             <TableColumn fx:id="colDate" prefWidth="75.0" text="Fecha" visible="false" />
-            <TableColumn fx:id="colEmpleado" prefWidth="205.0" text="Empleado" />
-            <TableColumn fx:id="colDia" minWidth="0.0" prefWidth="96.0" text="Dia" />
-          <TableColumn fx:id="colFecha" prefWidth="90.0" text="Fecha" />
-          <TableColumn fx:id="colTurno1" text="Turno 1" />
-            <TableColumn fx:id="colTurno2" prefWidth="73.0" text="Turno 2" />
-            <TableColumn fx:id="colTurno3" prefWidth="82.0" text="Turno 3" />
-            <TableColumn fx:id="colFichadas" prefWidth="130.0" text="Fichadas" />
-            <TableColumn fx:id="colNovedad" prefWidth="124.0" text="Novedad" />
-            <TableColumn fx:id="colSistema" prefWidth="123.0" text="Sistema" />
+            <TableColumn fx:id="colEmpleado" prefWidth="205.0" sortable="false" text="Empleado" />
+            <TableColumn fx:id="colDia" minWidth="0.0" prefWidth="96.0" sortable="false" text="Dia" />
+          <TableColumn fx:id="colFecha" prefWidth="90.0" sortable="false" text="Fecha" />
+          <TableColumn fx:id="colTurno1" sortable="false" text="Turno 1" />
+            <TableColumn fx:id="colTurno2" prefWidth="73.0" sortable="false" text="Turno 2" />
+            <TableColumn fx:id="colTurno3" prefWidth="82.0" sortable="false" text="Turno 3" />
+            <TableColumn fx:id="colFichadas" prefWidth="130.0" sortable="false" text="Fichadas" />
+            <TableColumn fx:id="colNovedad" prefWidth="124.0" sortable="false" text="Novedad" />
+            <TableColumn fx:id="colSistema" prefWidth="123.0" sortable="false" text="Sistema" />
         </columns>
       </TableView>
       <ComboBox fx:id="cmbNovedades" layoutX="330.0" layoutY="25.0" prefHeight="25.0" prefWidth="246.0" />
