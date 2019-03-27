@@ -15,10 +15,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,13 +24,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.sf.jasperreports.engine.JRException;
@@ -448,6 +444,8 @@ public class FXMLEmpleadoController implements Initializable {
     public void imprimir() throws SQLException {
         int cantidad = datosTabla.size();
         int i;
+        
+        
         Datos objDatos;
         Connection conn = BD.Conexion();
         String sql = "DELETE * FROM Informe";
@@ -455,14 +453,6 @@ public class FXMLEmpleadoController implements Initializable {
         
         for (i=1;i<=cantidad;i++) {
             objDatos = (Datos)datosTabla.get(i-1);
-            /*String sql = "INSERT INTO Informe (Empleado,Dia,Fecha,Horario,Registraciones,Novedad) VALUES ("
-                    + "'" + objDatos.getEmpleado() + "',"
-                    + "'" + objDatos.getDia() + "',"
-                    + "'" + objDatos.getFecha() + "',"
-                    + "'" + objDatos.getTurno1() + " " + objDatos.getTurno2() + " " + objDatos.getTurno3() + "',"
-                    + "'" + objDatos.getFichadas() + "',"
-                    + "'" + objDatos.getNovedad()+ "'"
-                    + ")";*/
             sql = "INSERT INTO Informe (Empleado,Dia,Fecha,Horario,Registraciones,Novedad) VALUES (?,?,?,?,?,?)";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, objDatos.getEmpleado());
