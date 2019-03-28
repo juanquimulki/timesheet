@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="266.0" prefWidth="525.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fundacionevangelica.reloj.ventanas.FXMLConfiguracionController">
+   <children>
+      <Label layoutX="21.0" layoutY="38.0" text="Base de Datos:" />
+      <TextField fx:id="txtBase" editable="false" layoutX="127.0" layoutY="34.0" prefHeight="25.0" prefWidth="331.0" />
+      <Button fx:id="btnBuscar" layoutX="462.0" layoutY="34.0" mnemonicParsing="false" onAction="#archivo" text="..." />
+      <Label layoutX="21.0" layoutY="68.0" text="Contraseña:" />
+      <TextField fx:id="txtClave" layoutX="127.0" layoutY="64.0" />
+      <Label layoutX="21.0" layoutY="116.0" text="Tardanza:" />
+      <TextField fx:id="txtTardanza" editable="false" layoutX="127.0" layoutY="112.0" prefHeight="25.0" prefWidth="64.0" />
+      <ScrollBar fx:id="scrTardanza" layoutX="198.0" layoutY="112.0" max="30.0" prefHeight="25.0" prefWidth="130.0" />
+      <Label layoutX="21.0" layoutY="146.0" text="Tardanza excesiva:" />
+      <TextField fx:id="txtExcesiva" editable="false" layoutX="127.0" layoutY="142.0" prefHeight="25.0" prefWidth="64.0" />
+      <ScrollBar fx:id="scrExcesiva" layoutX="198.0" layoutY="142.0" max="30.0" prefHeight="25.0" prefWidth="130.0" />
+      <Label layoutX="21.0" layoutY="176.0" text="Tempranza:" />
+      <TextField fx:id="txtTempranza" editable="false" layoutX="127.0" layoutY="172.0" prefHeight="25.0" prefWidth="64.0" />
+      <ScrollBar fx:id="scrTempranza" layoutX="198.0" layoutY="172.0" max="30.0" prefHeight="25.0" prefWidth="130.0" />
+      <Button fx:id="btnCancelar" layoutX="451.0" layoutY="231.0" mnemonicParsing="false" onAction="#cancelar" text="Cancelar" />
+      <Button fx:id="btnGuardar" layoutX="387.0" layoutY="231.0" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
+   </children>
+</AnchorPane>

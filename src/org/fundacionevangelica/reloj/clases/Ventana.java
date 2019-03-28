@@ -13,6 +13,8 @@ public class Ventana {
     public static boolean EMPLEADO_abierta = false;
     public static final String NOVEDAD = "/org/fundacionevangelica/reloj/ventanas/FXMLNovedad.fxml";
     public static boolean NOVEDAD_abierta = false;
+    public static final String CONFIGURACION = "/org/fundacionevangelica/reloj/ventanas/FXMLConfiguracion.fxml";
+    public static boolean CONFIGURACION_abierta = false;
 
     public static final String VENTANA_ABIERTA = "Atención! La ventana ya está abierta.";
     public static final String ACERCA_DE = "Ing. Juan M. Mulki A.\n"

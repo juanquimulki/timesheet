@@ -1,5 +1,8 @@
 package org.fundacionevangelica.reloj.ventanas;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.fundacionevangelica.reloj.datos.BD;
 import org.fundacionevangelica.reloj.clases.Datos;
 import java.net.URL;
@@ -14,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +28,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,8 +45,9 @@ import org.fundacionevangelica.reloj.clases.Ventana;
 
 public class FXMLEmpleadoController implements Initializable {
     int turnos    = 3;
-    int tardanza  = 10;
-    int tempranza = 5;
+    int tardanza;
+    int excesiva;
+    int tempranza;
     
     public static Datos datos;
    
@@ -323,6 +327,21 @@ public class FXMLEmpleadoController implements Initializable {
     private String novedades(int idlegajo, String fecha) {
         String cadena = "";
         int i;
+
+        Properties p = new Properties();
+        try {
+            p.load(new FileInputStream("config.properties"));
+        } catch (FileNotFoundException ex) {
+            System.out.println("archivo no encontrado");
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }        
+        
+        tardanza  = Integer.parseInt(p.getProperty("tardanza"));
+        excesiva  = Integer.parseInt(p.getProperty("excesiva"));
+        tempranza = Integer.parseInt(p.getProperty("tempranza"));
         
         Connection conn = BD.Conexion();
         String sql1 = "SELECT DefE1,DefS1,DefE2,DefS2,DefE3,DefS3"
@@ -358,9 +377,13 @@ public class FXMLEmpleadoController implements Initializable {
                         br=true;
                         entrada_real = registros.getInt("Hora");
                         minutos = entrada_real - entrada_teorica;
-                        if (minutos>tardanza) {
-                            cadena += "Entró tarde ("+minutos+")\n";
+                        if (minutos>excesiva) {
+                            cadena += "Entró muy tarde ("+minutos+")\n";
                         }
+                        else
+                            if (minutos>tardanza) {
+                                cadena += "Entró tarde ("+minutos+")\n";
+                            }
                         
                         if (registros.next()) {
                             salida_real = registros.getInt("Hora");
@@ -445,6 +468,8 @@ public class FXMLEmpleadoController implements Initializable {
         int cantidad = datosTabla.size();
         int i;
         
+        Alert alerta = new Alert(Alert.AlertType.NONE,"Espere por favor...",ButtonType.CLOSE);
+        alerta.show();
         
         Datos objDatos;
         Connection conn = BD.Conexion();
@@ -464,6 +489,8 @@ public class FXMLEmpleadoController implements Initializable {
             st.executeUpdate();
         }
         
+        alerta.close();
+
         HashMap params = new HashMap();
         JasperPrint jasperPrintWindow;
         try {
@@ -473,6 +500,5 @@ public class FXMLEmpleadoController implements Initializable {
         } catch (JRException ex) {
             System.out.println(ex.getMessage());
         }
-        
     }
 }

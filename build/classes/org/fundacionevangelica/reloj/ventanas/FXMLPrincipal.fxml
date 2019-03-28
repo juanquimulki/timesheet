@@ -10,11 +10,16 @@
    <children>
       <MenuBar prefHeight="25.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
+            <Menu mnemonicParsing="false" text="Archivo">
+              <items>
+                <MenuItem fx:id="mnuConfiguracion" mnemonicParsing="false" onAction="#menu_configuracion" text="Configuración" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#menu_salir" text="Salir" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Consultas">
             <items>
                   <MenuItem fx:id="mnuEmpleado" mnemonicParsing="false" onAction="#menu_empleado" text="Reporte Integral" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#menu_salir" text="Salir" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Ayuda">
