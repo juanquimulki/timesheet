@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.fundacionevangelica.reloj.clases.Ventana;
+import org.fundacionevangelica.reloj.datos.Propiedades;
 
 public class FXMLConfiguracionController implements Initializable {
     
@@ -88,31 +89,21 @@ public class FXMLConfiguracionController implements Initializable {
     }
     
     public void propiedades() {
-        Properties p = new Properties();
-        try {
-            p.load(new FileInputStream("config.properties"));
-            
-            txtBase.setText(p.getProperty("bd"));
-            txtClave.setText(p.getProperty("pass"));
-            
-            txtTardanza.setText(p.getProperty("tardanza"));
-            txtExcesiva.setText(p.getProperty("excesiva"));
-            txtTempranza.setText(p.getProperty("tempranza"));
-            
-            scrTardanza.setValue(Double.parseDouble(p.getProperty("tardanza")));
-            scrExcesiva.setValue(Double.parseDouble(p.getProperty("excesiva")));
-            scrTempranza.setValue(Double.parseDouble(p.getProperty("tempranza")));
-        } catch (FileNotFoundException ex) {
-            System.out.println("archivo no encontrado");
-            crear_archivo();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        Propiedades p = new Propiedades();
+
+        txtBase.setText(p.getBd());
+        txtClave.setText(p.getPass());
+
+        txtTardanza.setText(String.valueOf(p.getTardanza()));
+        txtExcesiva.setText(String.valueOf(p.getExcesiva()));
+        txtTempranza.setText(String.valueOf(p.getTempranza()));
+
+        scrTardanza.setValue(p.getTardanza());
+        scrExcesiva.setValue(p.getExcesiva());
+        scrTempranza.setValue(p.getTempranza());
     }
     
-    public void crear_archivo() {
+    /*public void crear_archivo() {
         try {
             String ruta = "config.properties";
             String contenido = "#Propiedades de la aplicacion\n"
@@ -135,7 +126,7 @@ public class FXMLConfiguracionController implements Initializable {
         } catch (Exception e) {
             System.out.println("archivo no creado");
         }        
-    }
+    }*/
     
     public void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow(); 

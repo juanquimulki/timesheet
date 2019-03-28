@@ -13,19 +13,10 @@ import javafx.scene.control.ButtonType;
 public class Conexiones {
 
     public static Connection Conexion1() {
-        Properties p = new Properties();
-        try {
-            p.load(new FileInputStream("config.properties"));
-        } catch (FileNotFoundException ex) {
-            System.out.println("archivo no encontrado");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }        
+        Propiedades p = new Propiedades();
         
-        String directorio = p.getProperty("bd");
-        String password = p.getProperty("pass");
+        String directorio = p.getBd();
+        String password = p.getPass();
         
         try {    
             return DriverManager.getConnection("jdbc:ucanaccess://"+directorio,"",password);
