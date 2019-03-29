@@ -73,4 +73,26 @@ public class FXMLPrincipalController implements Initializable {
             alerta.showAndWait();
         }
     }
+
+    public void menu_conteo() {
+        Ventana window = new Ventana();
+        if (!Ventana.CONTEO_abierta) {
+            Ventana.CONTEO_abierta = true;
+            Stage stage = window.mostrar(Ventana.CONTEO,"Conteo de Novedades");
+            
+            stage.setOnCloseRequest(new javafx.event.EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event1) {
+                    Ventana.CONTEO_abierta = false;
+                }
+            });
+        }
+        else {
+            String mensaje;
+            mensaje = Ventana.VENTANA_ABIERTA;
+
+            Alert alerta = new Alert(Alert.AlertType.NONE,mensaje,ButtonType.OK);
+            alerta.showAndWait();
+        }
+    }
 }

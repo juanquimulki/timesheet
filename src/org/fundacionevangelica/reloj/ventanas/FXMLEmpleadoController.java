@@ -1,8 +1,5 @@
 package org.fundacionevangelica.reloj.ventanas;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import org.fundacionevangelica.reloj.datos.BD;
 import org.fundacionevangelica.reloj.clases.Datos;
 import java.net.URL;
@@ -17,7 +14,6 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,8 +36,10 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import org.fundacionevangelica.reloj.clases.Empleados;
 import org.fundacionevangelica.reloj.clases.Fecha;
 import org.fundacionevangelica.reloj.clases.Ventana;
+import org.fundacionevangelica.reloj.datos.Propiedades;
 
 public class FXMLEmpleadoController implements Initializable {
     int turnos    = 3;
@@ -105,19 +103,14 @@ public class FXMLEmpleadoController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        int mes  = LocalDate.now().getMonthValue();
-        int anio = LocalDate.now().getYear();
-        
-        datDesde.setValue(LocalDate.of(anio,mes,1));
-        int ultimo = Fecha.ultimoDia(anio, mes);
-        datHasta.setValue(LocalDate.of(anio,mes,ultimo));
+        datDesde.setValue(Fecha.getDesde());
+        datHasta.setValue(Fecha.getHasta());
         
         modeloEmp = cmbEmpleados.getSelectionModel();
         cmbEmpleados.getItems().add("(Todos...)");
         listaEmp.add(0);
         try {
-            Connection conn = BD.Conexion();
-            ResultSet rs = BD.Ejecutar(conn,"SELECT IdLegajo,Nombre FROM Legajos");
+            ResultSet rs = Empleados.getEmpleados();
             while (rs.next()) {
                 cmbEmpleados.getItems().add(rs.getString(2));
                 listaEmp.add(rs.getInt(1));
@@ -328,20 +321,10 @@ public class FXMLEmpleadoController implements Initializable {
         String cadena = "";
         int i;
 
-        Properties p = new Properties();
-        try {
-            p.load(new FileInputStream("config.properties"));
-        } catch (FileNotFoundException ex) {
-            System.out.println("archivo no encontrado");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }        
-        
-        tardanza  = Integer.parseInt(p.getProperty("tardanza"));
-        excesiva  = Integer.parseInt(p.getProperty("excesiva"));
-        tempranza = Integer.parseInt(p.getProperty("tempranza"));
+        Propiedades p = new Propiedades();
+        tardanza  = p.getTardanza();
+        excesiva  = p.getExcesiva();
+        tempranza = p.getTempranza();
         
         Connection conn = BD.Conexion();
         String sql1 = "SELECT DefE1,DefS1,DefE2,DefS2,DefE3,DefS3"

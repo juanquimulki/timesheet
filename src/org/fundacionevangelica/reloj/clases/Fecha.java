@@ -1,5 +1,6 @@
 package org.fundacionevangelica.reloj.clases;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 
 public class Fecha {
@@ -14,4 +15,19 @@ public class Fecha {
         calendario.set(anio, mes-1, 1);
         return calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
     } 
+    
+    public static LocalDate getDesde() {
+        int mes  = LocalDate.now().getMonthValue();
+        int anio = LocalDate.now().getYear();
+        
+        return LocalDate.of(anio,mes,1);
+    }
+    
+    public static LocalDate getHasta() {
+        int mes  = LocalDate.now().getMonthValue();
+        int anio = LocalDate.now().getYear();
+        int ultimo = Fecha.ultimoDia(anio, mes);
+        
+        return LocalDate.of(anio,mes,ultimo);
+    }
 }

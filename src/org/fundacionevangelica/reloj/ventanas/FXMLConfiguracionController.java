@@ -1,9 +1,6 @@
 package org.fundacionevangelica.reloj.ventanas;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -102,31 +99,6 @@ public class FXMLConfiguracionController implements Initializable {
         scrExcesiva.setValue(p.getExcesiva());
         scrTempranza.setValue(p.getTempranza());
     }
-    
-    /*public void crear_archivo() {
-        try {
-            String ruta = "config.properties";
-            String contenido = "#Propiedades de la aplicacion\n"
-                    + "bd=C:/Program Files (x86)/C.In.Ti.A. Version Base/Cintia.mdb\n"
-                    + "pass=ngtayeXmr?h\n"
-                    + "tardanza=10\n"
-                    + "excesiva=15\n"
-                    + "tempranza=10";
-            File file = new File(ruta);
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(contenido);
-            bw.close();
-
-            propiedades();
-        } catch (Exception e) {
-            System.out.println("archivo no creado");
-        }        
-    }*/
     
     public void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow(); 
