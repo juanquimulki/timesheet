@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,13 +69,17 @@ public class FXMLConteoController implements Initializable {
         Alert alerta = new Alert(Alert.AlertType.NONE,"Espere por favor...",ButtonType.CLOSE);
         alerta.show();
         
+        LocalDate desde = datDesde.getValue();
+        LocalDate hasta = datHasta.getValue();
+        int idlegajo = (int)listaEmp.get(modeloEmp.getSelectedIndex());
+        
         try {
             Connection conn = BD.Conexion();
-            String sql = "SELECT Descripcion,COUNT(Fecha) AS Cantidad\n" +
-"FROM Fichadas\n" +
-"LEFT OUTER JOIN Novedades on Fichadas.CodNovedad=Novedades.IdNovedad\n" +
-"WHERE IdLegajo=1 AND Fecha BETWEEN #2019-03-01# AND #2019-03-31#\n" +
-"GROUP BY Descripcion;";
+            String sql = "SELECT Descripcion,COUNT(Fecha) AS Cantidad" +
+                         " FROM Fichadas" +
+                         " LEFT OUTER JOIN Novedades on Fichadas.CodNovedad=Novedades.IdNovedad" +
+                         " WHERE IdLegajo="+idlegajo+" AND Fecha BETWEEN #"+desde+"# AND #"+hasta+"# AND Descripcion<>''" +
+                         " GROUP BY Descripcion ORDER BY Descripcion;";
             ResultSet rs = BD.Ejecutar(conn,sql);
 
             colNovedad.setCellValueFactory(
