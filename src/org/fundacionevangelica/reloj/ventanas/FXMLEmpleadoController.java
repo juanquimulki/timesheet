@@ -303,7 +303,7 @@ public class FXMLEmpleadoController implements Initializable {
         String sql = "SELECT Hora"
                 + " FROM ArchivoRegistracion"
                 + " WHERE IdLegajo="+idlegajo+" AND Fecha = #"+fecha+"#"
-                + " ORDER BY IdFichada";
+                + " ORDER BY Hora";
         ResultSet rs = BD.Ejecutar(conn,sql);
 
         try {
@@ -335,7 +335,7 @@ public class FXMLEmpleadoController implements Initializable {
         String sql2 = "SELECT Hora"
                 + " FROM ArchivoRegistracion"
                 + " WHERE IdLegajo="+idlegajo+" AND Fecha = #"+fecha+"#"
-                + " ORDER BY IdFichada";
+                + " ORDER BY Hora";
 
         boolean bh=false;
         boolean br=false;

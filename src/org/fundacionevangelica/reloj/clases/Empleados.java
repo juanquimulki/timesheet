@@ -7,7 +7,7 @@ import org.fundacionevangelica.reloj.datos.BD;
 public class Empleados {
     
     public static ResultSet getEmpleados() {
-        String sql = "SELECT IdLegajo,Nombre FROM Legajos";
+        String sql = "SELECT IdLegajo,Nombre FROM Legajos ORDER BY Nombre";
         Connection conn = BD.Conexion();
         ResultSet rs = BD.Ejecutar(conn,sql);
         return rs;
