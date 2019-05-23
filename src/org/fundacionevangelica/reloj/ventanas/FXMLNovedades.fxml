@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fundacionevangelica.reloj.ventanas.FXMLNovedadesController">
+   <children>
+      <ComboBox fx:id="cmbEmpleados" layoutX="35.0" layoutY="53.0" prefWidth="150.0" />
+      <TextField fx:id="txtDiaD" layoutX="35.0" layoutY="85.0" prefHeight="22.0" prefWidth="39.0" />
+      <TextField fx:id="txtMesD" layoutX="84.0" layoutY="85.0" prefHeight="22.0" prefWidth="39.0" />
+      <TextField fx:id="txtAnioD" layoutX="133.0" layoutY="85.0" prefHeight="22.0" prefWidth="49.0" />
+      <TextField fx:id="txtAnioH" layoutX="342.0" layoutY="85.0" prefHeight="22.0" prefWidth="55.0" />
+      <TextField fx:id="txtMesH" layoutX="293.0" layoutY="85.0" prefHeight="22.0" prefWidth="39.0" />
+      <TextField fx:id="txtDiaH" layoutX="244.0" layoutY="85.0" prefHeight="22.0" prefWidth="39.0" />
+      <ComboBox fx:id="cmbNovedades" layoutX="35.0" layoutY="119.0" prefWidth="150.0" />
+      <Button fx:id="btnGuardar" layoutX="35.0" layoutY="155.0" mnemonicParsing="false" onAction="#guardar" prefHeight="43.0" prefWidth="150.0" text="GUARDAR" />
+   </children>
+</AnchorPane>

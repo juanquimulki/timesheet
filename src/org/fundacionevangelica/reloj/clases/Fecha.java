@@ -30,4 +30,19 @@ public class Fecha {
         
         return LocalDate.of(anio,mes,ultimo);
     }
+    
+    public static String getDia() {
+        int dia = LocalDate.now().getDayOfMonth();
+        return String.valueOf(dia);
+    }
+
+    public static String getMes() {
+        int mes = LocalDate.now().getMonthValue();
+        return String.valueOf(mes);
+    }
+
+    public static String getAnio() {
+        int anio = LocalDate.now().getYear();
+        return String.valueOf(anio);
+    }
 }

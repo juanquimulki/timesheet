@@ -95,4 +95,26 @@ public class FXMLPrincipalController implements Initializable {
             alerta.showAndWait();
         }
     }
+
+    public void menu_novedades() {
+        Ventana window = new Ventana();
+        if (!Ventana.NOVEDADES_abierta) {
+            Ventana.NOVEDADES_abierta = true;
+            Stage stage = window.mostrar(Ventana.NOVEDADES,"Carga de Novedades");
+            
+            stage.setOnCloseRequest(new javafx.event.EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event1) {
+                    Ventana.NOVEDADES_abierta = false;
+                }
+            });
+        }
+        else {
+            String mensaje;
+            mensaje = Ventana.VENTANA_ABIERTA;
+
+            Alert alerta = new Alert(Alert.AlertType.NONE,mensaje,ButtonType.OK);
+            alerta.showAndWait();
+        }
+    }
 }

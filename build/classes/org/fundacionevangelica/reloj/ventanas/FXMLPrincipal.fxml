@@ -18,6 +18,11 @@
               <MenuItem fx:id="mnuSalir" mnemonicParsing="false" onAction="#menu_salir" text="Salir" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Novedades">
+              <items>
+                <MenuItem fx:id="mnuNovedades" mnemonicParsing="false" onAction="#menu_novedades" text="Carga de Novedades" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Consultas">
             <items>
                   <MenuItem fx:id="mnuEmpleado" mnemonicParsing="false" onAction="#menu_empleado" text="Reporte Integral" />
