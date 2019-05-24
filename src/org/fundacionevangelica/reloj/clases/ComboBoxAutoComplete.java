@@ -33,6 +33,7 @@ public class ComboBoxAutoComplete<T> {
         private TextField enter_textfield;
         private Button enter_button;
         private String tipo_enter;
+        public Integer id;
 
 	public ComboBoxAutoComplete(ComboBox<T> cmb, TextField textField) {
 		this.cmb = cmb;
@@ -99,6 +100,11 @@ public class ComboBoxAutoComplete<T> {
 		filter = "";
 		cmb.getTooltip().hide();
 		T s = cmb.getSelectionModel().getSelectedItem();
+                String valor = s.toString();
+                String[] split = valor.split(" - ");
+                //System.out.println("Valor = " + split[0]);
+                this.id = Integer.parseInt(split[0]);
+                
 		cmb.getItems().setAll(originalItems);
 		cmb.getSelectionModel().select(s);
 	}

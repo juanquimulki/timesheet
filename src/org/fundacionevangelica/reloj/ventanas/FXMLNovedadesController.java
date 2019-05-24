@@ -65,6 +65,9 @@ public class FXMLNovedadesController implements Initializable {
 
     @FXML
     private Button btnGuardar;
+    
+    ComboBoxAutoComplete cmbEmp;
+    ComboBoxAutoComplete cmbNov;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -75,7 +78,7 @@ public class FXMLNovedadesController implements Initializable {
         try {
             ResultSet rs = Empleados.getEmpleados();
             while (rs.next()) {
-                cmbEmpleados.getItems().add(rs.getString(2));
+                cmbEmpleados.getItems().add(rs.getInt(1)+" - "+rs.getString(2));
                 listaEmp.add(rs.getInt(1));
             }
             cmbEmpleados.getSelectionModel().selectFirst();
@@ -90,7 +93,7 @@ public class FXMLNovedadesController implements Initializable {
             Connection conn = BD.Conexion();
             ResultSet rs = BD.Ejecutar(conn,"SELECT IdNovedad,Descripcion FROM Novedades ORDER BY Descripcion");
             while (rs.next()) {
-                cmbNovedades.getItems().add(rs.getString(2));
+                cmbNovedades.getItems().add(rs.getInt(1)+" - "+rs.getString(2));
                 listaNov.add(rs.getInt(1));
             }
             cmbNovedades.getSelectionModel().selectFirst();
@@ -128,14 +131,25 @@ public class FXMLNovedadesController implements Initializable {
         });
 
         cmbEmpleados.setTooltip(new Tooltip());
-        new ComboBoxAutoComplete<String>(cmbEmpleados,txtDiaD);
+        cmbEmp = new ComboBoxAutoComplete<String>(cmbEmpleados,txtDiaD);
         cmbNovedades.setTooltip(new Tooltip());
-        new ComboBoxAutoComplete<String>(cmbNovedades,btnGuardar);
+        cmbNov = new ComboBoxAutoComplete<String>(cmbNovedades,btnGuardar);
         //FxUtilTest.autoCompleteComboBoxPlus(cmbEmpleados, (typedText, itemToCompare) -> itemToCompare.getName().toLowerCase().contains(typedText.toLowerCase()) || itemToCompare.getAge().toString().equals(typedText));
     }    
     
     public void guardar() {
-            Alert alerta = new Alert(Alert.AlertType.NONE,"La novedad ha sido guardada!",ButtonType.OK);
-            alerta.showAndWait();        
+        int idlegajo  = cmbEmp.id; //(int)listaEmp.get(modeloEmp.getSelectedIndex());
+        String fecha_desde = txtAnioD.getText()+"-"+txtMesD.getText()+"-"+txtDiaD.getText(); //txtDiaD.getText()+"/"+txtMesD.getText()+"/"+txtAnioD.getText();
+        String fecha_hasta = txtAnioH.getText()+"-"+txtMesH.getText()+"-"+txtDiaH.getText();
+        int idnovedad = cmbNov.id; //(int)listaNov.get(modeloNov.getSelectedIndex());
+        
+        Connection conn = BD.Conexion();
+        String sql = "UPDATE Fichadas SET CodNovedad="+idnovedad+" WHERE IdLegajo="+idlegajo+" AND Fecha BETWEEN #"+fecha_desde+"# AND #"+fecha_hasta+"#";
+        int resultado = BD.Actualizar(conn,sql);
+        System.out.println(sql);
+
+        Alert alerta = new Alert(Alert.AlertType.NONE,"La novedad ha sido guardada! "+String.valueOf(resultado),ButtonType.OK);
+        alerta.showAndWait();
+        cmbEmpleados.requestFocus();
     }
 }
