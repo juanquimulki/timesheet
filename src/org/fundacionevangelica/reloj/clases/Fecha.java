@@ -5,11 +5,16 @@ import java.util.Calendar;
 
 public class Fecha {
     private static String[] dias = {"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
+    private static String[] dias1 = {"Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado","Domingo"};
     
     public static String[] diasSemana () {
         return dias;
     }    
-
+    
+    public static String[] diasSemana1 () {
+        return dias1;
+    }     
+    
     public static int ultimoDia(int anio, int mes) {
         Calendar calendario=Calendar.getInstance();
         calendario.set(anio, mes-1, 1);

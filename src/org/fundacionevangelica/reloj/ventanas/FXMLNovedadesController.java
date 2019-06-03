@@ -148,7 +148,7 @@ public class FXMLNovedadesController implements Initializable {
         int resultado = BD.Actualizar(conn,sql);
         System.out.println(sql);
 
-        Alert alerta = new Alert(Alert.AlertType.NONE,"La novedad ha sido guardada! "+String.valueOf(resultado),ButtonType.OK);
+        Alert alerta = new Alert(Alert.AlertType.NONE,"La novedad ha sido guardada! (Registros: "+String.valueOf(resultado)+")",ButtonType.OK);
         alerta.showAndWait();
         cmbEmpleados.requestFocus();
     }

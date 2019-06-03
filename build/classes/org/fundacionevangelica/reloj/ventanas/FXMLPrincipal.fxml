@@ -26,6 +26,7 @@
           <Menu mnemonicParsing="false" text="Consultas">
             <items>
                   <MenuItem fx:id="mnuEmpleado" mnemonicParsing="false" onAction="#menu_empleado" text="Reporte Integral" />
+                  <MenuItem fx:id="mnuHorarios" mnemonicParsing="false" onAction="#menu_horarios" text="Imprimir Horarios" />
                   <MenuItem fx:id="mnuConteo" mnemonicParsing="false" onAction="#menu_conteo" text="Conteo de Novedades" />
             </items>
           </Menu>

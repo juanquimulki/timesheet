@@ -117,4 +117,27 @@ public class FXMLPrincipalController implements Initializable {
             alerta.showAndWait();
         }
     }
+    
+    public void menu_horarios() {
+        Ventana window = new Ventana();
+        if (!Ventana.HORARIOS_abierta) {
+            Ventana.HORARIOS_abierta = true;
+            Stage stage = window.mostrar(Ventana.HORARIOS,"Imprimir Horarios");
+            
+            stage.setOnCloseRequest(new javafx.event.EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event1) {
+                    Ventana.HORARIOS_abierta = false;
+                }
+            });
+        }
+        else {
+            String mensaje;
+            mensaje = Ventana.VENTANA_ABIERTA;
+
+            Alert alerta = new Alert(Alert.AlertType.NONE,mensaje,ButtonType.OK);
+            alerta.showAndWait();
+        }
+    }
+    
 }
