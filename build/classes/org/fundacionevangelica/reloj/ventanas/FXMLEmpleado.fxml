@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="frmEmpleado" prefHeight="433.0" prefWidth="1028.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fundacionevangelica.reloj.ventanas.FXMLEmpleadoController">
+<AnchorPane id="AnchorPane" fx:id="frmEmpleado" prefHeight="433.0" prefWidth="1109.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fundacionevangelica.reloj.ventanas.FXMLEmpleadoController">
    <children>
       <Label layoutX="14.0" layoutY="8.0" text="Nivel:" />
       <ComboBox fx:id="cmbNiveles" layoutX="14.0" layoutY="25.0" prefHeight="25.0" prefWidth="311.0" />
@@ -19,7 +19,7 @@
       <DatePicker fx:id="datHasta" layoutX="456.0" layoutY="68.0" prefHeight="25.0" prefWidth="120.0" />
       <Button fx:id="btnMostrar" layoutX="582.0" layoutY="24.0" mnemonicParsing="false" onAction="#mostrar" prefHeight="71.0" prefWidth="78.0" text="Mostrar" />
       <Button fx:id="btnImprimir" layoutX="666.0" layoutY="24.0" mnemonicParsing="false" onAction="#imprimir" prefHeight="71.0" prefWidth="78.0" text="Imprimir" />
-      <TableView fx:id="tblDatos" layoutX="14.0" layoutY="132.0" prefHeight="293.0" prefWidth="1004.0">
+      <TableView fx:id="tblDatos" layoutX="14.0" layoutY="132.0" prefHeight="293.0" prefWidth="1079.0">
         <columns>
             <TableColumn fx:id="colId" prefWidth="75.0" text="Id" visible="false" />
             <TableColumn fx:id="colDate" prefWidth="75.0" text="Fecha" visible="false" />
@@ -32,6 +32,7 @@
             <TableColumn fx:id="colFichadas" prefWidth="130.0" sortable="false" text="Fichadas" />
             <TableColumn fx:id="colNovedad" prefWidth="124.0" sortable="false" text="Novedad" />
             <TableColumn fx:id="colSistema" prefWidth="123.0" sortable="false" text="Sistema" />
+            <TableColumn fx:id="colMinutos" prefWidth="75.0" text="Minutos" />
         </columns>
       </TableView>
       <ComboBox fx:id="cmbNovedades" layoutX="330.0" layoutY="25.0" prefHeight="25.0" prefWidth="246.0" />

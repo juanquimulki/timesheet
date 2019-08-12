@@ -12,10 +12,11 @@ public class Datos {
     private String fichadas;
     private String novedad;
     private String sistema;
+    private String minutos;
 
     public Datos() {}
     
-    public Datos(String id, String date, String empleado, String dia, String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad, String sistema) {
+    public Datos(String id, String date, String empleado, String dia, String fecha, String turno1, String turno2, String turno3,String fichadas,String novedad, String sistema, String minutos) {
         this.id       = id;
         this.date     = date;
         this.empleado = empleado;
@@ -27,6 +28,7 @@ public class Datos {
         this.fichadas = fichadas;
         this.novedad  = novedad;
         this.sistema  = sistema;
+        this.minutos  = minutos;
     }
 
     public String getId() {
@@ -115,5 +117,13 @@ public class Datos {
 
     public void setSistema(String sistema) {
         this.sistema = sistema;
+    }
+
+    public String getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(String minutos) {
+        this.minutos = minutos;
     }
 }

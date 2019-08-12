@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -98,6 +99,8 @@ public class FXMLEmpleadoController implements Initializable {
     TableColumn colNovedad;
     @FXML
     TableColumn colSistema;
+    @FXML
+    TableColumn colMinutos;
     
     ObservableList datosTabla = FXCollections.observableArrayList();    
     
@@ -204,11 +207,14 @@ public class FXMLEmpleadoController implements Initializable {
                     new PropertyValueFactory<Datos, String>("novedad"));  
             colSistema.setCellValueFactory(
                     new PropertyValueFactory<Datos, String>("sistema"));  
+            colMinutos.setCellValueFactory(
+                    new PropertyValueFactory<Datos, String>("minutos"));  
             datosTabla.clear();
         
             SimpleDateFormat mmddyyyyFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat yyyymmddFormat = new SimpleDateFormat("yyyy-MM-dd");
             while (rs.next()) {
+                String novedadString = novedades(rs.getInt(9),yyyymmddFormat.format(rs.getTimestamp(1)));
                 Datos objDatos = new Datos(
                         String.valueOf(rs.getInt(9)),
                         yyyymmddFormat.format(rs.getTimestamp(1)),
@@ -219,8 +225,9 @@ public class FXMLEmpleadoController implements Initializable {
                         aTurno(rs.getInt(4),rs.getInt(5)),
                         aTurno(rs.getInt(6),rs.getInt(7)),
                         getFichadas(rs.getInt(9),yyyymmddFormat.format(rs.getTimestamp(1))),
-                        novedades(rs.getInt(9),yyyymmddFormat.format(rs.getTimestamp(1))),
-                        rs.getString(8)
+                        novedadString,
+                        rs.getString(8),
+                        minutos(novedadString)
                 );
                 
                 if (!chkFinde.isSelected()) {
@@ -315,6 +322,24 @@ public class FXMLEmpleadoController implements Initializable {
         }
         
         return cadena;
+    }
+    
+    private String minutos(String novedad) {
+        String separador = Pattern.quote("(");
+
+        int inicio = novedad.indexOf("(");
+        
+        if(inicio != -1) {
+            String[] parts = novedad.split(separador);
+            if (parts[1]!=null) {
+                int fin = parts[1].indexOf(")");
+                return parts[1].substring(0,fin);
+            }
+            else
+                return "";
+        }
+        else
+            return "";
     }
     
     private String novedades(int idlegajo, String fecha) {
@@ -461,7 +486,7 @@ public class FXMLEmpleadoController implements Initializable {
         
         for (i=1;i<=cantidad;i++) {
             objDatos = (Datos)datosTabla.get(i-1);
-            sql = "INSERT INTO Informe (Empleado,Dia,Fecha,Horario,Registraciones,Novedad) VALUES (?,?,?,?,?,?)";
+            sql = "INSERT INTO Informe (Empleado,Dia,Fecha,Horario,Registraciones,Novedad,Minutos) VALUES (?,?,?,?,?,?,?)";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, objDatos.getEmpleado());
             st.setString(2, objDatos.getDia());
@@ -469,6 +494,7 @@ public class FXMLEmpleadoController implements Initializable {
             st.setString(4, objDatos.getTurno1()+" "+objDatos.getTurno2()+" "+objDatos.getTurno3());
             st.setString(5, objDatos.getFichadas());
             st.setString(6, objDatos.getSistema());
+            st.setString(7, objDatos.getMinutos());
             st.executeUpdate();
         }
         
